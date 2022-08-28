@@ -21,6 +21,7 @@ MDScreen:
                 spacing: 15
                             
                 MDTextField:
+                    id: drug
                     hint_text: "Введите название препарата"
                     # helper_text: "Название препара введено некорректно"
                     # helper_text_mode: "on_error"
@@ -28,9 +29,11 @@ MDScreen:
                     width: 300
                     
                 MDRaisedButton:
+                    id: research_info
                     text: "Поиск"
                     md_bg_color: 0, 0, 1, 1
                     halign: 'left'
+                    on_press: app.info()
                      
                 
                 MDLabel:
@@ -40,7 +43,6 @@ MDScreen:
                 MDLabel:
                     id: info
                     text: "#"
-                    size_hint_x: None
                     pos_hint: {'left': 1}
                 
                 MDLabel:
@@ -65,19 +67,73 @@ MDScreen:
             name: 'Incompatibilities'
             text: 'Несовместимости'
             icon: 'close-circle-outline'
+            
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_size: True
+                pos_hint: {'center_x': .5, 'center_y': .75}
+                spacing: 15
 
-            MDLabel:
-                text: 'Incompatibilities'
-                halign: 'center'
+                MDTextField:
+                    hint_text: "Введите название препарата"
+                    # helper_text: "Название препара введено некорректно"
+                    # helper_text_mode: "on_error"
+                    size_hint_x: None
+                    width: 300
+                    
+                MDRaisedButton:
+                    id: research_incomp
+                    text: "Поиск"
+                    md_bg_color: 0, 0, 1, 1
+                    halign: 'left'
+                    on_press: app.incomp()
+                     
 
+                MDLabel:
+                    id: list_med
+                    text: "список препаратов"
+                    pos_hint: {'left': 1}
+                    
+                    
         MDBottomNavigationItem:
             name: 'Compatibility'
             text: 'Совместимость'
             icon: 'file-search'
 
-            MDLabel:
-                text: 'Compatibility'
-                halign: 'center'
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_size: True
+                pos_hint: {'center_x': .5, 'center_y': .75}
+                spacing: 15
+
+                MDTextField:
+                    id: drug_1
+                    hint_text: "Введите название препарата"
+                    # helper_text: "Название препара введено некорректно"
+                    # helper_text_mode: "on_error"
+                    size_hint_x: None
+                    width: 300
+                    
+                MDTextField:
+                    id: drug_2
+                    hint_text: "Введите название препарата"
+                    # helper_text: "Название препара введено некорректно"
+                    # helper_text_mode: "on_error"
+                    size_hint_x: None
+                    width: 300
+                    
+                MDRaisedButton:
+                    id: research_comp
+                    text: "Поиск"
+                    md_bg_color: 0, 0, 1, 1
+                    halign: 'left'
+                    on_press: app.comp()
+                     
+
+                MDLabel:
+                    id: compatibility
+                    text: "препараты совместимы/несовместимы"
+                    pos_hint: {'left': 1}
         
         MDBottomNavigationItem:
             name: 'Calendar'
@@ -109,10 +165,24 @@ MDScreen:
 
 
 class Med(MDApp):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.screen = Builder.load_string(navigation)
+        self.theme_cls.material_style = "M3"
+
+    def info(self):
+        name = self.screen.ids.drug.text
+        self.screen.ids.indications.text = 'New text'
+
+    def incomp(self):
+        self.screen.ids.list_med.text = 'List of drugs'
+
+    def comp(self):
+        self.screen.ids.compatibility.text = 'УРААА'
 
     def build(self):
-        self.theme_cls.material_style = "M3"
-        return Builder.load_string(navigation)
+        return self.screen
 
 
-Med().run()
+if __name__ == "__main__":
+    Med().run()
