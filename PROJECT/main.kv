@@ -136,9 +136,22 @@ MDScreen:
             text: 'Календарь'
             icon: 'calendar'
 
-            MDLabel:
-                text: 'Calendar'
-                halign: 'center'
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_size: True
+                pos_hint: {'center_x': .5, 'center_y': .75}
+                spacing: 15
+
+                MDRaisedButton:
+                    id: calendar
+                    text: "Выбрать дату"
+                    md_bg_color: 0, 0, 1, 1
+                    halign: 'left'
+                    on_press: app.calendar()
+
+                MDLabel:
+                    id: date
+                    text: "Some stuff!"
 
         MDBottomNavigationItem:
             name: 'Health statistic'
