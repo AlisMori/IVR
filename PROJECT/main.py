@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.pickers import MDDatePicker
+from kivy.uix.screenmanager import ScreenManager, Screen
 import bs4
 import requests
 
@@ -65,7 +66,13 @@ class Med(MDApp):
         date_dialog.open()
 
     def build(self):
-        return self.screen
+        sm = ScreenManager()
+        sm.add_widget(Builder.load_file('welcome.kv'))
+        sm.add_widget(Builder.load_file('signup_screen.kv'))
+        sm.add_widget(Builder.load_file('login_screen.kv'))
+        sm.add_widget(self.screen)
+
+        return sm
 
 
 if __name__ == "__main__":

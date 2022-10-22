@@ -1,0 +1,28 @@
+MDScreen:
+    name: "welcome"
+
+    MDLabel:
+        text: "H E L L O!"
+        font_style: "H4"
+        pos_hint: {"center_x": 0.5, "center_y": 0.8}
+        halign: "center"
+        color: "blue"
+
+    MDRaisedButton:
+        text: "LOG IN"
+        md_bg_color: "blue"
+        size_hint: 0.66, .065
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        on_release:
+            root.manager.transition.direction = "left"
+            root.manager.current = "login"
+
+    MDRectangleFlatButton:
+        text: "SIGN UP"
+        text_color: "blue"
+        line_color: "blue"
+        size_hint: 0.66, .065
+        pos_hint: {"center_x": 0.5, "center_y": 0.35}
+        on_release:
+            root.manager.transition.direction = "left"
+            root.manager.current = "signup"
