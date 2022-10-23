@@ -4,6 +4,9 @@ from kivymd.uix.pickers import MDDatePicker
 from kivy.uix.screenmanager import ScreenManager, Screen
 import bs4
 import requests
+from datetime import datetime
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+import matplotlib.pyplot as plt
 
 
 class Med(MDApp):
@@ -11,6 +14,41 @@ class Med(MDApp):
         super().__init__(**kwargs)
         self.screen = Builder.load_file('main.kv')
         self.theme_cls.material_style = "M3"
+        self.signup_sc = Builder.load_file('signup_screen.kv')
+        self.login_sc = Builder.load_file('login_screen.kv')
+
+    def signup(self):
+        user = self.signup_sc.ids.username.text
+        pw = self.signup_sc.ids.password.text
+        birthday = self.signup_sc.ids.birthday.text
+        weight = self.signup_sc.ids.weight.text
+        height = self.signup_sc.ids.height.text
+
+        if datetime.strptime(birthday, '%d.%m.%Y') > datetime.now():
+            self.signup_sc.ids.birthday.error = True
+        if int(weight) > 500:
+            self.signup_sc.ids.weight.error = True
+        if int(height) > 400:
+            self.signup_sc.ids.height.error = True
+        else:
+            response = requests.post("http://127.0.0.1:5000/users/make_new",
+                                     json={'full_name': f'{user}', 'password': f'{pw}', 'weight': f'{weight}',
+                                           'birthday': f'{birthday}', 'height': f'{height}'})
+            if response.text == '401':
+                self.signup_sc.ids.username.error = True
+            elif response.text == '201':
+                self.root.current = 'main'
+
+    def login(self):
+        user = self.login_sc.ids.username.text
+        pw = self.login_sc.ids.password.text
+        response = requests.post("http://127.0.0.1:5000/users/login",
+                                 json={'full_name': f'{user}', 'password': f'{pw}'})
+
+        if response.text == '401':
+            self.login_sc.ids.password.error = True
+        elif response.text == '201':
+            self.root.current = 'main'
 
     def formatting(self, temp):
         ls = []
@@ -68,8 +106,8 @@ class Med(MDApp):
     def build(self):
         sm = ScreenManager()
         sm.add_widget(Builder.load_file('welcome.kv'))
-        sm.add_widget(Builder.load_file('signup_screen.kv'))
-        sm.add_widget(Builder.load_file('login_screen.kv'))
+        sm.add_widget(self.signup_sc)
+        sm.add_widget(self.login_sc)
         sm.add_widget(self.screen)
 
         return sm

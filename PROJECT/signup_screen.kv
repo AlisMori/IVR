@@ -28,37 +28,52 @@ MDScreen:
             padding_y: 15
 
         MDTextField:
-            hint_text: "username"
+            id: username
+            hint_text: "Username"
             icon_right: "account"
+            helper_text: "Nickname already exists"
+            helper_text_mode: "on_error"
             size_hint_x: None
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
 
         MDTextField:
-            hint_text: "birthday"
+            id: birthday
+            hint_text: "Birthday (dd.mm.yy)"
             icon_right: "calendar"
+            helper_text: "Incorrect"
+            helper_text_mode: "on_error"
             size_hint_x: None
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
 
         MDTextField:
-            hint_text: "weight"
+            id: weight
+            hint_text: "Weight"
+            max_text_length: 3
+            helper_text: "Incorrect"
+            helper_text_mode: "on_error"
             size_hint_x: None
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
 
         MDTextField:
-            hint_text: "height"
+            id: height
+            hint_text: "Height"
+            max_text_length: 3
+            helper_text: "Incorrect"
+            helper_text_mode: "on_error"
             size_hint_x: None
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
 
         MDTextField:
-            hint_text: "password"
+            id: password
+            hint_text: "Password"
             icon_right: "eye-off"
             size_hint_x: None
             width: 200
@@ -72,6 +87,4 @@ MDScreen:
             font_size: 12
             pos_hint: {"center_x": 0.5}
             md_bg_color: "blue"
-            on_release:
-                root.manager.transition.direction = "up"
-                root.manager.current = "main"
+            on_press: app.signup()
