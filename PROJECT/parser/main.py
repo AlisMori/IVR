@@ -12,7 +12,7 @@ db_session.global_init("db/baza.sqlite")
 
 
 @app.route('/users/make_new', methods=['POST'])
-def make_new():
+def make_new():  # проверка и создание нового пользователя
     request_data = request.get_json()
     session = db_session.create_session()
     if session.query(User).filter(User.full_name == request_data['full_name']).first():
@@ -32,7 +32,7 @@ def make_new():
 
 
 @app.route('/users/login', methods=['POST'])
-def login():
+def login():  # проверка и вход пользователя
     request_data = request.get_json()
     session = db_session.create_session()
     user = session.query(User).filter(User.full_name == request_data['full_name']).first()

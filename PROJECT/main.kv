@@ -12,12 +12,13 @@ MDScreen:
 
             MDBoxLayout:
                 orientation: 'vertical'
+                padding: '30sp'
 
                 MDTextField:
                     id: drug
                     hint_text: "Введите название препарата"
-                    # helper_text: "Название препара введено некорректно"
-                    # helper_text_mode: "on_error"
+                    helper_text: "Проверьте правильность введеного названия"
+                    helper_text_mode: "on_error"
                     size_hint_x: None
                     width: 300
 
@@ -25,39 +26,38 @@ MDScreen:
                     id: research_info
                     text: "Поиск"
                     md_bg_color: 0, 0, 1, 1
-                    halign: 'left'
                     on_press: app.info()
 
 
                 MDLabel:
                     text: "Описание"
-                    halign: 'left'
+                    font_style: "Body1"
 
                 MDLabel:
                     id: info
                     text: ""
-                    size: self.texture_size
-                    pos_hint: {'left': 1}
+                    text_size: self.size
+                    font_style: "Body2"
 
                 MDLabel:
                     text: "Показания к применению"
-                    halign: 'left'
+                    font_style: "Body1"
 
                 MDLabel:
                     id: indications
-                    text: ""
-                    size: self.texture_size
-                    halign: 'left'
+                    ext: ""
+                    text_size: self.size
+                    font_style: "Body2"
 
                 MDLabel:
                     text: "Противопоказания к применению"
-                    halign: 'left'
+                    ont_style: "Body1"
 
                 MDLabel:
                     id: contraindications
                     text: ""
-                    size: self.texture_size
-                    halign: 'left'
+                    text_size: self.size
+                    font_style: "Body2"
 
         MDBottomNavigationItem:
             name: 'Incompatibilities'
@@ -158,17 +158,42 @@ MDScreen:
             name: 'Health statistic'
             text: 'Здоровье'
             icon: 'chart-areaspline'
+            on_tab_press: app.graph()
 
-            MDLabel:
-                text: 'Health statistic'
-                halign: 'center'
+
 
         MDBottomNavigationItem:
             name: 'Profile'
             text: 'Профиль'
             icon: 'account'
+            on_tab_press: app.get_profile()
 
-            MDLabel:
-                text: 'Profile'
-                halign: 'center'
+            MDBoxLayout:
+                orientation: 'vertical'
+
+                MDLabel:
+                    id: username
+                    text: 'name'
+                    font_style: "H3"
+                    halign: "center"
+
+                MDLabel:
+                    id: birthday
+                    text: 'birthday: '
+                    font_style: "Body1"
+                    halign: "center"
+
+                MDLabel:
+                    id: weight
+                    text: 'weight: '
+                    font_style: "Body1"
+                    halign: "center"
+
+
+                MDLabel:
+                    id: height
+                    text: 'height: '
+                    font_style: "Body1"
+                    halign: "center"
+
 
