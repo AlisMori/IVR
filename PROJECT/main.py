@@ -1,11 +1,13 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.pickers import MDDatePicker
-from kivy.uix.screenmanager import ScreenManager, Screen
-import bs4
+from kivy.uix.screenmanager import ScreenManager
 import requests
 from datetime import datetime
 import find_info
+import subprocess
+import sys
+from threading import Thread
 
 
 class Med(MDApp):
@@ -49,7 +51,7 @@ class Med(MDApp):
         if response.text == '401':  # ошибка если пароль неправильный
             self.login_sc.ids.password.error = True
         elif response.text == '201':
-            self.root.current = 'main
+            self.root.current = 'main'
             self.screen.ids.username.text = user
 
     def info(self):  # вывод описания, показаний и противопоказаний к применению введеного препарата
@@ -70,7 +72,7 @@ class Med(MDApp):
     def incomp(self):  # вывод несовместимых препаратов с данным
         self.screen.ids.list_med.text = 'List of drugs'
 
-    def comp(self): # проверка на взаимодействие двух препаратов (вывод совместимы/несовместимы)
+    def comp(self):  # проверка на взаимодействие двух препаратов (вывод совместимы/несовместимы)
         self.screen.ids.compatibility.text = 'УРААА'
 
     def on_save(self, instance, value, date_range):
@@ -85,7 +87,24 @@ class Med(MDApp):
         date_dialog.open()
 
     def graph(self):
-        pass
+        weight = self.screen.ids.weight_stat.text
+        presure_s = self.screen.ids.pressure_s.text
+        presure_d = self.screen.ids.pressure_d.text
+        glucose = self.screen.ids.glucose.text
+        if int(weight) > 500:
+            self.screen.ids.weight.error = True
+        if 90 > int(presure_s) or int(presure_s) > 200:
+            self.screen.ids.pressure_s.error = True
+        if 60 > int(presure_d) or int(presure_d) > 100:
+            self.screen.ids.pressure_d.error = True
+        if 3.3 > float(glucose) or float(glucose) > 7.8:
+            self.screen.ids.glucose.error = True
+        else:
+            response = requests.post("http://127.0.0.1:5000/users/stats",
+                                     json={'weight': f'{weight}', 'pressure_s': f'{presure_s}',
+                                           'pressure_d': f'{presure_d}', 'glucose': f'{glucose}'})
+            if response.text == '201':
+                Thread(target=lambda *largs: subprocess.run([sys.executable, "diagram.py"])).start()
 
     def get_profile(self):
         pass

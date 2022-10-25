@@ -156,9 +156,65 @@ MDScreen:
 
         MDBottomNavigationItem:
             name: 'Health statistic'
+            id: health
             text: 'Здоровье'
             icon: 'chart-areaspline'
-            on_tab_press: app.graph()
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: '30sp'
+
+                MDTextField:
+                    id: weight_stat
+                    hint_text: "Вес"
+                    helper_text: "Incorrect"
+                    helper_text_mode: "on_error"
+                    max_text_length: 3
+                    size_hint_x: None
+                    width: 200
+                    pos_hint: {"center_x": 0.5}
+                    ont_size: 18
+
+                MDTextField:
+                    id: pressure_s
+                    hint_text: "Артериальное давление (САД)"
+                    helper_text: "Incorrect"
+                    helper_text_mode: "on_error"
+                    max_text_length: 3
+                    size_hint_x: None
+                    width: 200
+                    pos_hint: {"center_x": 0.5}
+                    font_size: 18
+
+                MDTextField:
+                    id: pressure_d
+                    hint_text: "Артериальное давление (ДАД)"
+                    helper_text: "Incorrect"
+                    helper_text_mode: "on_error"
+                    max_text_length: 3
+                    size_hint_x: None
+                    width: 200
+                    pos_hint: {"center_x": 0.5}
+                    font_size: 18
+
+                MDTextField:
+                    id: glucose
+                    hint_text: "Уровень глюкозы в крови"
+                    max_text_length: 3
+                    helper_text: "Incorrect"
+                    helper_text_mode: "on_error"
+                    size_hint_x: None
+                    width: 200
+                    pos_hint: {"center_x": 0.5}
+                    font_size: 18
+
+                MDRaisedButton:
+                    id: stats_graph
+                    text: "Показать статистику"
+                    font_size: 12
+                    pos_hint: {"center_x": 0.5}
+                    md_bg_color: "blue"
+                    on_press: app.graph()
 
 
 

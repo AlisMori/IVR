@@ -1,6 +1,7 @@
 from flask import Flask, request
 from data import db_session
 from data.users import User
+from data.stats import Stats
 import werkzeug
 import datetime
 
@@ -24,7 +25,9 @@ def make_new():  # проверка и создание нового польз�
                     birthday=datetime.datetime.strptime(request_data['birthday'], '%m.%d.%Y'),
                     weight=request_data['weight'],
                     height=request_data['height'])
+        stat = Stats(weight=request_data['weight'])
         session.add(user)
+        session.add(stat)
         session.commit()
         session.close()
         print(user)
@@ -40,6 +43,21 @@ def login():  # проверка и вход пользователя
         return '201'
     else:
         return '401'
+
+
+@app.route('/users/stats', methods=['POST'])
+def stats():  # добавление статистики в бд
+    request_data = request.get_json()
+    session = db_session.create_session()
+    stat = Stats(weight=request_data['weight'],
+                 pressure_s=request_data['pressure_s'],
+                 pressure_d=request_data['pressure_d'],
+                 glucose=request_data['glucose'])
+    session.add(stat)
+    Stats.user_id = User.query.id
+    session.commit()
+    session.close()
+    return '201'
 
 
 def main():
