@@ -1,17 +1,15 @@
 from matplotlib import pyplot as plt
-import numpy as np
 from kivy.garden.matplotlib import FigureCanvasKivyAgg
 from kivy.app import App
 from kivy.lang import Builder
-
-
-# from data.users import User
-# from data.stats import Stats
+#from parser.data import db_session
+#from parser.data.stats import Stats
 
 
 class Graph(App):
 
-    def build(self):
+    def build(self, user_id):
+        user_id = self.user_id
         self.str = Builder.load_string(""" 
 
 BoxLayout:
@@ -23,11 +21,8 @@ BoxLayout:
 
                                 """)
 
-        # weight = Stats.query.filter_by(user_id=User.query.filter_by(id=1).first().weight).all()
-        # pressure_s = Stats.query.filter_by(user_id=User.query.filter_by(id=1).first().pressure_s).all()
-        # pressure_d = Stats.query.filter_by(user_id=User.query.filter_by(id=1).first().pressure_s).all()
-        # glucose = Stats.query.filter_by(user_id=User.query.filter_by(id=1).first().glucose).all()
-        # date = Stats.query..filter_by(user_id=User.query.filter_by(id=1).first().created_date).all()
+        #session = db_session.create_session()
+        #session.query(Stats).filter(Stats.user_id == user_id).all()
 
         weight = [50, 49, 51, 52]
         pressure_s = [100, 125, 127, 119]

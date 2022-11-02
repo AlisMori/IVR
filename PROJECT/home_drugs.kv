@@ -1,0 +1,40 @@
+MDScreen:
+    name: "home_drugs"
+    MDIconButton:
+        icon: "arrow-left"
+        pos_hint: {"center_x": 0.05, "center_y": 0.97}
+        user_font_size: "40sp"
+        on_release:
+            root.manager.transition.direction = "down"
+            root.manager.current = "main"
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: '30sp'
+        spacing: 10
+
+        MDTextField:
+            id: drug
+            hint_text: "Введите название препарата"
+            helper_text: "Название препара введено некорректно"
+            helper_text_mode: "on_error"
+            size_hint_x: None
+            width: 300
+
+        MDRaisedButton:
+            id: add_med
+            text: "Добавить"
+            md_bg_color: 0, 0, 1, 1
+            halign: 'left'
+            on_press: app.add_med()
+
+        MDRaisedButton:
+            id: add_med
+            text: "Обновить"
+            md_bg_color: 0, 0, 1, 1
+            halign: 'right'
+            on_press: app.show_med()
+
+        MDScrollView:
+            MDLabel:
+                id: table
+                text: 'Препаратов нет'
