@@ -127,13 +127,15 @@ class Med(MDApp):
         global user_id
         drug = self.home_drugs.ids.drug.text
         url = find_info.find_url(drug)
-        if url == '':
+        response = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': user_id})
+        listt = response.json()
+        if url == '' or drug in listt:
             self.home_drugs.ids.drug.error = True
         else:
             requests.post("http://127.0.0.1:5000/medicines/add_medicines",
                           json={'user_id': f'{user_id}', 'name': f'{drug}'})
-            response = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': user_id})
-            ls = response.json()
+            response_new = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': user_id})
+            ls = response_new.json()
             self.home_drugs.ids.table.text = '\n'.join(ls)
 
     def show_med(self):

@@ -15,7 +15,7 @@ MDScreen:
         MDTextField:
             id: drug
             hint_text: "Введите название препарата"
-            helper_text: "Название препара введено некорректно"
+            helper_text: "Ошибка"
             helper_text_mode: "on_error"
             size_hint_x: None
             width: 300
@@ -27,14 +27,7 @@ MDScreen:
             halign: 'left'
             on_press: app.add_med()
 
-        MDRaisedButton:
-            id: add_med
-            text: "Обновить"
-            md_bg_color: 0, 0, 1, 1
-            halign: 'right'
-            on_press: app.show_med()
-
         MDScrollView:
             MDLabel:
                 id: table
-                text: 'Препаратов нет'
+                text: ''
