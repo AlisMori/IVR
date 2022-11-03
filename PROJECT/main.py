@@ -5,6 +5,8 @@ from kivy.uix.screenmanager import ScreenManager
 import requests
 from datetime import datetime
 import find_info
+import find_incomp
+import find_comp
 import subprocess
 import sys
 from threading import Thread
@@ -62,9 +64,9 @@ class Med(MDApp):
 
     def info(self):  # вывод описания, показаний и противопоказаний к применению введеного препарата
         name = self.screen.ids.drug.text
-        description = find_info.info(name)
-        indications = find_info.indication(name)
-        contraindications = find_info.contraindication(name)
+        description = find_info.info(name.lower())
+        indications = find_info.indication(name.lower())
+        contraindications = find_info.contraindication(name.lower())
         if not description and not indications and not contraindications:
             self.screen.ids.info.text = 'Препарат не найден'
             self.screen.ids.indications.text = 'Препарат не найден'
@@ -76,10 +78,21 @@ class Med(MDApp):
             self.screen.ids.contraindications.text = contraindications
 
     def incomp(self):  # вывод несовместимых препаратов с данным
-        self.screen.ids.list_med.text = 'List of drugs'
+        drug = self.screen.ids.incomp_drug.text
+        incomp = find_incomp.list_incomp(drug.lower())
+        if incomp == '':
+            self.screen.ids.list_med.text = 'Информация не найдена'
+        else:
+            self.screen.ids.list_med.text = '\n'.join(incomp)
 
-    def comp(self):  # проверка на взаимодействие двух препаратов (вывод совместимы/несовместимы)
-        self.screen.ids.compatibility.text = 'УРААА'
+    def comp(self):  # проверка на взаимодействие двух препаратов
+        drug_1 = self.screen.ids.drug_1.text
+        drug_2 = self.screen.ids.drug_2.text
+        result = find_comp.find_interaction(drug_1.lower(), drug_2.lower())
+        if result != '':
+            self.screen.ids.compatibility.text = f'Степень серьезности/тяжести взаимодействия: {result.lower()}'
+        else:
+            self.screen.ids.compatibility.text = 'Степень серьезности/тяжести взаимодействия: информация не найдена'
 
     def on_save(self, instance, value, date_range):
         self.screen.ids.date.text = f'{str(date_range[0])} - {str(date_range[-1])}'
@@ -113,7 +126,7 @@ class Med(MDApp):
             if response.text == '201':
                 Thread(target=lambda *largs: subprocess.run([sys.executable, "diagram.py"])).start()
 
-    def get_profile(self):
+    def get_profile(self):  # вывод данных на страницу профиля
         global user_id
         response = requests.get("http://127.0.0.1:5000/users/user", json={'id': user_id})
         ls = response.json()
@@ -123,7 +136,7 @@ class Med(MDApp):
         self.screen.ids.weight.text = f'Вес: {ls[2]}'
         self.screen.ids.height.text = f'Рост: {ls[3]}'
 
-    def add_med(self):
+    def add_med(self):  # добавление препаратов в "домашнюю аптечку"
         global user_id
         drug = self.home_drugs.ids.drug.text
         url = find_info.find_url(drug)
@@ -138,7 +151,7 @@ class Med(MDApp):
             ls = response_new.json()
             self.home_drugs.ids.table.text = '\n'.join(ls)
 
-    def show_med(self):
+    def show_med(self):  # отображение препаратов из "домашней аптечки"
         global user_id
         response = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': user_id})
         if response:

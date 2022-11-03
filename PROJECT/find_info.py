@@ -9,17 +9,20 @@ def formatting(temp):  # форматирует найденую информа�
 
 
 def find_url(name):  # поиск необходимой url
-    url = f"https://www.rlsnet.ru/search_result.htm?word={name}"
-    r = requests.get(url, headers={'User-agent': 'your bot 0.1'})
-    soup = bs4.BeautifulSoup(r.text, 'lxml')
+    try:
+        url = f"https://www.rlsnet.ru/search_result.htm?word={name}"
+        r = requests.get(url, headers={'User-agent': 'your bot 0.1'})
+        soup = bs4.BeautifulSoup(r.text, 'lxml')
 
-    medications = list(filter(lambda x: len(x['class']) == 1, soup.find_all("ul")[20].find_all("a", class_="link")))
-    if medications:
-        for i in medications:
-            namemed = i.text.replace('®', '').lower()
-            if namemed == name:
-                return i['href']
-    else:
+        medications = list(filter(lambda x: len(x['class']) == 1, soup.find_all("ul")[20].find_all("a", class_="link")))
+        if medications:
+            for i in medications:
+                namemed = i.text.replace('®', '').lower()
+                if namemed == name:
+                    return i['href']
+        else:
+            return ''
+    except IndexError:
         return ''
 
 
