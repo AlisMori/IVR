@@ -12,7 +12,7 @@ MDScreen:
 
             MDBoxLayout:
                 orientation: 'vertical'
-                padding: '30sp'
+                #padding: '10sp'
 
                 MDTextField:
                     id: drug
@@ -34,36 +34,42 @@ MDScreen:
                     font_style: "Body1"
 
                 MDScrollView:
-                    MDList:
-                        MDLabel:
-                            id: info
-                            text: ""
-                            # text_size: self.size
-                            font_style: "Body2"
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    MDLabel:
+                        id: info
+                        text: ""
+                        text_size: self.texture_size
+                        adaptive_size: True
+                        font_style: "Body2"
 
                 MDLabel:
                     text: "Показания к применению"
                     font_style: "Body1"
 
                 MDScrollView:
-                    MDList:
-                        MDLabel:
-                            id: indications
-                            text: ""
-                            # text_size: self.size
-                            font_style: "Body2"
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    MDLabel:
+                        id: indications
+                        text: ""
+                        text_size: root.size
+                        adaptive_size: True
+                        font_style: "Body2"
 
                 MDLabel:
                     text: "Противопоказания к применению"
                     ont_style: "Body1"
 
                 MDScrollView:
-                    MDList:
-                        MDLabel:
-                            id: contraindications
-                            text: ""
-                            # text_size: self.size
-                            font_style: "Body2"
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    MDLabel:
+                        id: contraindications
+                        text: ""
+                        text_size: root.size
+                        adaptive_size: True
+                        font_style: "Body2"
 
         MDBottomNavigationItem:
             name: 'Incompatibilities'
@@ -93,11 +99,12 @@ MDScreen:
                 ScrollView:
                     do_scroll_x: False
                     do_scroll_y: True
-                    MDList:
-                        MDLabel:
-                            id: list_med
-                            text: "Cписок препаратов"
-                            pos_hint: {'left': 1}
+                    MDLabel:
+                        id: list_med
+                        text: "Cписок препаратов"
+                        text_size: root.size
+                        adaptive_size: True
+                        pos_hint: {'left': 1}
 
 
         MDBottomNavigationItem:
@@ -146,21 +153,45 @@ MDScreen:
 
             MDBoxLayout:
                 orientation: 'vertical'
-                adaptive_size: True
-                pos_hint: {'center_x': .5, 'center_y': .75}
-                spacing: 15
+                padding: '30sp'
+                spacing: 10
 
                 MDRaisedButton:
                     id: calendar
-                    text: "Выбрать дату"
+                    text: "Выбрать дату и время"
                     md_bg_color: 0, 0, 1, 1
-                    halign: 'left'
-                    helper_text_mode: "on_error"
+                    size_hint: 0.65, .065
                     on_press: app.calendar()
 
                 MDLabel:
                     id: date
-                    text: "Some stuff!"
+                    text: "Дата"
+
+                MDLabel:
+                    id: time
+                    text: "Время"
+
+                MDTextField:
+                    id: periodicity
+                    hint_text: 'Периодичность(в минутах)'
+                    input_filter: 'int'
+
+                MDTextField:
+                    id: drugs
+                    hint_text: "Введите препарат из 'Домашней аптечки'"
+                    helper_text: "Такого препарата нет в аптечке"
+                    helper_text_mode: "on_error"
+
+                MDRaisedButton:
+                    id: reminder
+                    text: "Создать напоминание"
+                    font_size: 12
+                    md_bg_color: "blue"
+                    on_press: app.remind()
+
+                MDLabel:
+                    id: remind_s
+                    text: ''
 
         MDBottomNavigationItem:
             name: 'Health statistic'
@@ -168,9 +199,8 @@ MDScreen:
             text: 'Здоровье'
             icon: 'chart-areaspline'
 
-            MDBoxLayout:
-                orientation: 'vertical'
-                padding: '30sp'
+            MDStackLayout:
+                spacing: 15
 
                 MDTextField:
                     id: weight_stat
@@ -181,7 +211,7 @@ MDScreen:
                     size_hint_x: None
                     width: 200
                     pos_hint: {"center_x": 0.5}
-                    ont_size: 18
+                    font_size: 18
 
                 MDTextField:
                     id: pressure_s
@@ -223,6 +253,16 @@ MDScreen:
                     pos_hint: {"center_x": 0.5}
                     md_bg_color: "blue"
                     on_press: app.graph()
+
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    FitImage:
+                        id: image
+                        source: 'white.png'
+                        keep_ratio: True
+                        size_hint: None, None
+                        size: Window.size
 
 
 

@@ -29,9 +29,9 @@ MDScreen:
 
         MDTextField:
             id: username
-            hint_text: "Username"
+            hint_text: "Имя пользователя"
             icon_right: "account"
-            helper_text: "Nickname already exists"
+            helper_text: "Такой никнейм уже существует"
             helper_text_mode: "on_error"
             size_hint_x: None
             width: 200
@@ -40,7 +40,7 @@ MDScreen:
 
         MDTextField:
             id: birthday
-            hint_text: "Birthday (dd.mm.yy)"
+            hint_text: "Дата рождения (мм.дд.гггг)"
             icon_right: "calendar"
             helper_text: "Incorrect"
             helper_text_mode: "on_error"
@@ -48,10 +48,12 @@ MDScreen:
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
+            #validator: "date"
+            #date_format: "mm/dd/yyyy"
 
         MDTextField:
             id: weight
-            hint_text: "Weight"
+            hint_text: "Вес"
             max_text_length: 3
             helper_text: "Incorrect"
             helper_text_mode: "on_error"
@@ -59,10 +61,11 @@ MDScreen:
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
+            input_filter: 'int'
 
         MDTextField:
             id: height
-            hint_text: "Height"
+            hint_text: "Рост"
             max_text_length: 3
             helper_text: "Incorrect"
             helper_text_mode: "on_error"
@@ -70,10 +73,11 @@ MDScreen:
             width: 200
             pos_hint: {"center_x": 0.5}
             font_size: 18
+            input_filter: 'int'
 
         MDTextField:
             id: password
-            hint_text: "Password"
+            hint_text: "Пароль"
             icon_right: "eye-off"
             size_hint_x: None
             width: 200
@@ -83,7 +87,7 @@ MDScreen:
 
         MDRaisedButton:
             id: click_continue
-            text: "Continue"
+            text: "Продолжить"
             font_size: 12
             pos_hint: {"center_x": 0.5}
             md_bg_color: "blue"

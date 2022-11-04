@@ -63,6 +63,18 @@ def stats():  # добавление статистики в бд
     return '201'
 
 
+@app.route('/users/get_stats', methods=['GET'])
+def get_stats():
+    request_data = request.get_json()
+    session = db_session.create_session()
+    user_stats = session.query(Stats).filter(Stats.user_id == request_data['id']).all()
+    data = []
+    for i in range(len(user_stats)):
+        data.append([user_stats[i].weight, user_stats[i].pressure_s, user_stats[i].pressure_d, user_stats[i].glucose,
+                     user_stats[i].created_date])
+    return data
+
+
 @app.route('/medicines/add_medicines', methods=['POST'])
 def add_medicines():  # Добавление препаратов в отдельную бд. Создание "домашняя аптечка"
     request_data = request.get_json()
@@ -75,12 +87,26 @@ def add_medicines():  # Добавление препаратов в отдел�
     return '201'
 
 
+@app.route('/medicine/add_reminder', methods=['POST'])
+def add_reminder():
+    request_data = request.get_json()
+    session = db_session.create_session()
+    reminder = Reminder(user_id=request_data['user_id'],
+                        medicine_id=request_data['medicine_id'],
+                        date_time=datetime.datetime.strptime(request_data['date_time'], '%Y-%m-%d %H:%M:%S'),
+                        periodicity=request_data['periodicity'])
+    session.add(reminder)
+    session.commit()
+    session.close()
+    return '201'
+
+
 @app.route('/medicine/check_reminder', methods=['POST'])
 def check_reminder():  # Уведомления о приеме препарата
     request_data = request.get_json()
     session = db_session.create_session()
     datet = session.query(Reminder).filter(Reminder.user_id == request_data['user_id']).order_by(
-        -Reminder.date_time).first()
+        Reminder.date_time).first()
     if datetime.datetime.now() - datetime.datetime.strptime(str(datet.date_time),
                                                             '%Y-%m-%d %H:%M:%S') <= datetime.timedelta(minutes=15):
         print(datet.date_time)
@@ -108,9 +134,9 @@ def get_medicines():  # Получение данных "домашняя апт
     request_data = request.get_json()
     session = db_session.create_session()
     med = session.query(Medicine).filter(Medicine.user_id == request_data['id']).all()
-    data = []
+    data = {}
     for i in range(len(med)):
-        data.append(med[i].name)
+        data.update({med[i].name: med[i].id})
     return data
 
 

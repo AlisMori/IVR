@@ -28,6 +28,10 @@ MDScreen:
             on_press: app.add_med()
 
         MDScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
             MDLabel:
                 id: table
                 text: ''
+                text_size: root.size
+                adaptive_size: True
