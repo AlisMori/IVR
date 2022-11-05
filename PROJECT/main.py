@@ -93,32 +93,30 @@ class Med(MDApp):
         else:
             self.screen.ids.compatibility.text = 'Степень серьезности/тяжести взаимодействия: информация не найдена'
 
-    def timer(self, instance, value, date_range):
-        self.date = value
+    def timer(self, instance, value, date_range):  # выбор времени по средствам виджита TimePiker
         self.screen.ids.date.text = str(value)
         time_dialog = MDTimePicker()
         time_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         time_dialog.open()
 
     def on_save(self, instance, value):
-        self.time = value
         self.screen.ids.time.text = str(value)
 
-    def on_cancel(self, instance, value):
+    def on_cancel(self, instance, value):  # при нажатии кнопки cancel
         self.screen.ids.date.text = "Необходимо выбрать дату"
         self.screen.ids.time.text = "Необходимо выбрать время"
 
-    def calendar(self):
+    def calendar(self):  # выбор даты по средствам виджита DatePiker
         date_dialog = MDDatePicker()
         date_dialog.bind(on_save=self.timer, on_cancel=self.on_cancel)
         date_dialog.open()
 
-    def add_stats(self):
+    def add_stats(self):  # добавление статистики в БД
         weight = self.screen.ids.weight_stat.text
         presure_s = self.screen.ids.pressure_s.text
         presure_d = self.screen.ids.pressure_d.text
         glucose = self.screen.ids.glucose.text
-        if int(weight) > 500:
+        if int(weight) > 500:  # проверка введенных данных на "адекватность"
             self.screen.ids.weight.error = True
         elif 90 > int(presure_s) or int(presure_s) > 200:
             self.screen.ids.pressure_s.error = True
@@ -134,7 +132,7 @@ class Med(MDApp):
             if response.text == '201':
                 self.screen.ids.stats_status.text = 'Данные добавлены'
 
-    def graph(self):
+    def graph(self):  # отрисовка диаграмм по данным из БД
         diagram.graph(self.user_id)
 
     def get_profile(self):  # вывод данных на страницу профиля
@@ -160,13 +158,13 @@ class Med(MDApp):
             ls = response_new.json()
             self.home_drugs.ids.table.text = '\n'.join(ls.keys())
 
-    def show_med(self):  # отображение препаратов из "домашней аптечки"
+    def show_med(self):  # отображение препаратов из "Домашней аптечки"
         response = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': self.user_id})
         if response:
             ls = response.json()
             self.home_drugs.ids.table.text = '\n'.join(ls.keys())
 
-    def remind(self):
+    def remind(self):  # добавление напоминания в бд о приеме препарата
         date_r = self.screen.ids.date.text
         time_r = self.screen.ids.time.text
         periodicity = self.screen.ids.periodicity.text
@@ -175,7 +173,7 @@ class Med(MDApp):
         response = requests.get("http://127.0.0.1:5000/medicines/get_medicines", json={'id': self.user_id})
         if response:
             ls = response.json()
-            if drug in ls.keys():
+            if drug in ls.keys():  # проверка есть ли введеный препарат в "Домашней аптечке"
                 response_r = requests.post("http://127.0.0.1:5000/medicine/add_reminder",
                                            json={'user_id': self.user_id, 'medicine_id': ls[drug.lower()],
                                                  'date_time': datet, 'periodicity': periodicity})
@@ -184,16 +182,15 @@ class Med(MDApp):
             else:
                 self.screen.ids.drugs.error = True
 
-    def check_remind(self):
+    def check_remind(self):  # проверка необходимости уведомления о приеме препарата
         response = requests.get("http://127.0.0.1:5000/medicine/check_reminder",
                                 json={'user_id': self.user_id})
         print(response.text)
         if response.text != 'No':
-
             Notification().open(title='MedNoti',
-                                message=f'Скоро время приема {response.text}')
+                                message=f'Скоро время приема препарата {response.text}')
 
-        Timer(900, self.check_remind).start()
+        Timer(300, self.check_remind).start()  # каждые 5 минут возвращается к этой функции
 
     def build(self):  # основная функция класса
         sm = ScreenManager()
