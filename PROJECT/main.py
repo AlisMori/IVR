@@ -110,7 +110,7 @@ class Med(MDApp):
         date_dialog.bind(on_save=self.timer, on_cancel=self.on_cancel)
         date_dialog.open()
 
-    def graph(self):
+    def add_stats(self):
         weight = self.screen.ids.weight_stat.text
         presure_s = self.screen.ids.pressure_s.text
         presure_d = self.screen.ids.pressure_d.text
@@ -129,8 +129,10 @@ class Med(MDApp):
                                            'pressure_s': f'{presure_s}',
                                            'pressure_d': f'{presure_d}', 'glucose': f'{glucose}'})
             if response.text == '201':
-                diagram.graph(self.user_id)
-                self.screen.ids.image.source = 'graph.png'
+                self.screen.ids.stats_status.text = 'Данные добавлены'
+
+    def graph(self):
+        diagram.graph(self.user_id)
 
     def get_profile(self):  # вывод данных на страницу профиля
         response = requests.get("http://127.0.0.1:5000/users/user", json={'id': self.user_id})
@@ -186,6 +188,7 @@ class Med(MDApp):
         sm.add_widget(self.login_sc)
         sm.add_widget(self.screen)
         sm.add_widget(self.home_drugs)
+        sm.add_widget(Builder.load_file('graph.kv'))
 
         return sm
 

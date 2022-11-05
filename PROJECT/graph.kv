@@ -1,0 +1,20 @@
+MDScreen:
+    name: "graph"
+
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        FitImage:
+            id: image
+            source: 'graph.png'
+            keep_ratio: True
+            size_hint: None, None
+            size: Window.size
+
+    MDIconButton:
+        icon: "arrow-left"
+        pos_hint: {"center_x": 0.05, "center_y": 0.97}
+        user_font_size: "40sp"
+        on_release:
+            root.manager.transition.direction = "down"
+            root.manager.current = "main"

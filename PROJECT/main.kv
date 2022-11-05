@@ -199,8 +199,10 @@ MDScreen:
             text: 'Здоровье'
             icon: 'chart-areaspline'
 
-            MDStackLayout:
-                spacing: 15
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: '30sp'
+                spacing: 10
 
                 MDTextField:
                     id: weight_stat
@@ -248,23 +250,26 @@ MDScreen:
 
                 MDRaisedButton:
                     id: stats_graph
+                    text: "Добавить статистику"
+                    font_size: 12
+                    pos_hint: {"center_x": 0.5}
+                    md_bg_color: "blue"
+                    on_press: app.add_stats()
+
+                MDRaisedButton:
+                    id: stats_graph
                     text: "Показать статистику"
                     font_size: 12
                     pos_hint: {"center_x": 0.5}
                     md_bg_color: "blue"
-                    on_press: app.graph()
+                    on_press:
+                        root.manager.transition.direction = "up"
+                        root.manager.current = "graph"
+                        app.graph()
 
-                ScrollView:
-                    do_scroll_x: False
-                    do_scroll_y: True
-                    FitImage:
-                        id: image
-                        source: 'white.png'
-                        keep_ratio: True
-                        size_hint: None, None
-                        size: Window.size
-
-
+                MDLabel:
+                    id: stats_status
+                    text: ''
 
         MDBottomNavigationItem:
             name: 'Profile'
