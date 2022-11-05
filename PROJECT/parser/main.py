@@ -24,7 +24,7 @@ def make_new():  # проверка и создание нового польз�
     else:
         user = User(full_name=request_data['full_name'],
                     password_hash=werkzeug.security.generate_password_hash(request_data['password']),
-                    birthday=datetime.datetime.strptime(request_data['birthday'], '%m.%d.%Y'),
+                    birthday=datetime.datetime.strptime(request_data['birthday'], '%d.%m.%Y'),
                     weight=request_data['weight'],
                     height=request_data['height'])
         session.add(user)
@@ -101,14 +101,14 @@ def add_reminder():
     return '201'
 
 
-@app.route('/medicine/check_reminder', methods=['POST'])
+@app.route('/medicine/check_reminder', methods=['GET'])
 def check_reminder():  # Уведомления о приеме препарата
     request_data = request.get_json()
     session = db_session.create_session()
     datet = session.query(Reminder).filter(Reminder.user_id == request_data['user_id']).order_by(
         Reminder.date_time).first()
-    if datetime.datetime.now() - datetime.datetime.strptime(str(datet.date_time),
-                                                            '%Y-%m-%d %H:%M:%S') <= datetime.timedelta(minutes=15):
+    if (datetime.datetime.strptime(str(datet.date_time),
+                                   '%Y-%m-%d %H:%M:%S') - datetime.datetime.now()) <= datetime.timedelta(minutes=15):
         print(datet.date_time)
         datet.date_time = datet.date_time + datetime.timedelta(minutes=datet.periodicity)
         print(datet.date_time)

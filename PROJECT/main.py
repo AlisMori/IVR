@@ -9,6 +9,7 @@ import find_incomp
 import find_comp
 import diagram
 from kivy.garden.notification import Notification
+from threading import Timer
 
 
 class Med(MDApp):
@@ -30,11 +31,11 @@ class Med(MDApp):
         height = self.signup_sc.ids.height.text
 
         # проверка данных на "адекватность"
-        if datetime.strptime(birthday, '%m.%d.%Y') > datetime.now():
+        if datetime.strptime(birthday, '%d.%m.%Y') > datetime.now():
             self.signup_sc.ids.birthday.error = True
-        if int(weight) > 500:
+        elif int(weight) > 500:
             self.signup_sc.ids.weight.error = True
-        if int(height) > 400:
+        elif int(height) > 400:
             self.signup_sc.ids.height.error = True
         else:  # добавление в бд, если данные "адекватные"
             response = requests.post("http://127.0.0.1:5000/users/make_new",
@@ -45,6 +46,7 @@ class Med(MDApp):
             else:
                 self.user_id = response.text
                 self.root.current = 'main'
+                self.check_remind()
 
     def login(self):  # вход
         user = self.login_sc.ids.username.text
@@ -57,6 +59,7 @@ class Med(MDApp):
         else:
             self.user_id = response.text
             self.root.current = 'main'
+            self.check_remind()
 
     def info(self):  # вывод описания, показаний и противопоказаний к применению введеного препарата
         name = self.screen.ids.drug.text
@@ -180,6 +183,17 @@ class Med(MDApp):
                     self.screen.ids.remind_s.text = 'Напоминание создано'
             else:
                 self.screen.ids.drugs.error = True
+
+    def check_remind(self):
+        response = requests.get("http://127.0.0.1:5000/medicine/check_reminder",
+                                json={'user_id': self.user_id})
+        print(response.text)
+        if response.text != 'No':
+
+            Notification().open(title='MedNoti',
+                                message=f'Скоро время приема {response.text}')
+
+        Timer(900, self.check_remind).start()
 
     def build(self):  # основная функция класса
         sm = ScreenManager()
