@@ -33,7 +33,8 @@ def find_interaction(drug_1, drug_2):
             return ''
         else:
             res = soup.find('div', class_='block-content').text
-            res = res.replace('\n', '').replace(' ', '')
+            words = res.split()
+            res = " ".join(sorted(set(words), key=words.index))
             return res
     except AttributeError:
         return ''

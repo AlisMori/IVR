@@ -31,7 +31,7 @@ class Med(MDApp):
         height = self.signup_sc.ids.height.text
 
         # проверка данных на "адекватность"
-        if datetime.strptime(birthday, '%d.%m.%Y') > datetime.now():
+        if not self.date_test(birthday):
             self.signup_sc.ids.birthday.error = True
         elif int(weight) > 500:
             self.signup_sc.ids.weight.error = True
@@ -47,6 +47,16 @@ class Med(MDApp):
                 self.user_id = response.text
                 self.root.current = 'main'
                 self.check_remind()
+
+    def date_test(self, date):
+        try:
+            datetime.strptime(date, '%d.%m.%Y')
+            if date < datetime.now():
+                return True
+            else:
+                return False
+        except ValueError:
+            return False
 
     def login(self):  # вход
         user = self.login_sc.ids.username.text
@@ -185,8 +195,8 @@ class Med(MDApp):
     def check_remind(self):  # проверка необходимости уведомления о приеме препарата
         response = requests.get("http://127.0.0.1:5000/medicine/check_reminder",
                                 json={'user_id': self.user_id})
-        print(response.text)
-        if response.text != 'No':
+        # print(response.text)
+        if response.text != 'No' and response.reason != 'INTERNAL SERVER ERROR':
             Notification().open(title='MedNoti',
                                 message=f'Скоро время приема препарата {response.text}')
 
